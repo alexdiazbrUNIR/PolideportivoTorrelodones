@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Reservas - Polideportivo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">⚽ Polideportivo Torrelodones</span>
+        <a href="{{ url_for('index') }}" class="btn btn-outline-light btn-sm">← Volver</a>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h3>Mis Reservas</h3>
+            <p>Introduce el correo con el que hiciste la reserva para ver y cancelar (si procede).</p>
+
+            <div class="input-group mb-3">
+                <input id="emailInput" type="email" class="form-control" placeholder="tu@email.com">
+                <button id="btnBuscar" class="btn btn-primary">Buscar</button>
+            </div>
+
+            <div id="resultados"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('btnBuscar').addEventListener('click', async () => {
+        const email = document.getElementById('emailInput').value.trim();
+        if (!email) return alert('Introduce un email');
+        const res = await fetch(`/api/mis_reservas?email=${encodeURIComponent(email)}`);
+        if (!res.ok) {
+            const j = await res.json();
+            return alert('Error: ' + (j.error || res.statusText));
+        }
+        const datos = await res.json();
+        const cont = document.getElementById('resultados');
+        if (!datos || datos.length === 0) {
+            cont.innerHTML = '<div class="alert alert-info">No se encontraron reservas con ese email.</div>';
+            return;
+        }
+        let html = '<ul class="list-group">';
+        datos.forEach(d => {
+            html += `<li class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                    <div><strong>ID:</strong> ${d.id} — <strong>Instalación:</strong> ${d.instalacion_id}</div>
+                    <div><strong>Usuario:</strong> ${d.nombre_usuario} — <strong>Email:</strong> ${d.email}</div>
+                    <div><strong>Desde:</strong> ${d.fecha_inicio} — <strong>Hasta:</strong> ${d.fecha_fin}</div>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-danger" onclick="cancelar(${d.id}, '${d.email}')">Cancelar</button>
+                </div>
+            </li>`;
+        });
+        html += '</ul>';
+        cont.innerHTML = html;
+    });
+
+    async function cancelar(id, email) {
+        if (!confirm('¿Deseas cancelar la reserva ID ' + id + '?')) return;
+        const res = await fetch('/api/cancel_reserva', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({reserva_id: id, email: email})
+        });
+        const j = await res.json();
+        if (!res.ok) {
+            return alert('Error: ' + (j.error || res.statusText));
+        }
+        alert('Reserva cancelada correctamente');
+        document.getElementById('btnBuscar').click();
+    }
+</script>
+</body>
+</html>

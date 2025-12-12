@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polideportivo Torrelodones - Reservas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">⚽ Polideportivo Torrelodones</span>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h1 class="mb-4">Selecciona una instalación</h1>
+                
+                <div class="row">
+                    {% for instalacion in instalaciones %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 facility-card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ instalacion['nombre'] }}</h5>
+                                <p class="card-text">{{ instalacion['descripcion'] }}</p>
+                                <p class="card-text fw-bold">
+                                    <span class="badge bg-success">{{ instalacion['tarifa_hora'] }}€/hora</span>
+                                </p>
+                                <a href="{{ url_for('seleccionar_instalacion', instalacion_id=instalacion['id']) }}" 
+                                   class="btn btn-primary w-100">
+                                    Reservar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center text-muted mt-5 pb-4">
+        <p>Sistema de reservas - Polideportivo Ficticio</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

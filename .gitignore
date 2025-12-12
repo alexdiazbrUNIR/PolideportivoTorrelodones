@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+venv/
+.env
+.Python
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Database
+reservas.db
+
+# Logs
+*.log
+
+# Word temporary
+~$*.docx
+
+# Generated reports
+Informe_Final.pdf
+
+# Virtual envs
+.venv/
+
+# Mac
+._*
+
+# Ignore node_modules if present
+node_modules/

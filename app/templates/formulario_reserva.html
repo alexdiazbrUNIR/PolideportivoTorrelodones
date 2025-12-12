@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Reserva - Polideportivo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">⚽ Polideportivo Torrelodones</span>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-light btn-sm">← Volver</a>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">Confirmar Reserva</h4>
+                        
+                        <div class="alert alert-info" role="alert">
+                            <strong>{{ instalacion['nombre'] }}</strong><br>
+                            📅 {{ fecha }} - 🕐 {{ hora }}<br>
+                            💰 {{ instalacion['tarifa_hora'] }}€
+                        </div>
+                        
+                        <form id="formReserva">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-success w-100">
+                                ✓ Confirmar Reserva
+                            </button>
+                        </form>
+                        
+                        <div id="mensajeError" class="alert alert-danger mt-3" style="display:none;"></div>
+                        <div id="mensajeExito" class="alert alert-success mt-3" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const instalacionId = {{ instalacion['id'] }};
+        const fecha = '{{ fecha }}';
+        const hora = '{{ hora }}';
+        
+        document.getElementById('formReserva').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const datos = {
+                instalacion_id: instalacionId,
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('email').value,
+                fecha: fecha,
+                hora: hora
+            };
+            
+            try {
+                const response = await fetch('/api/crear_reserva', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(datos)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('mensajeExito').style.display = 'block';
+                    document.getElementById('mensajeExito').textContent = '✓ Reserva creada correctamente';
+                    document.getElementById('formReserva').style.display = 'none';
+
+                    // Mostrar enlace de cancelación (simulación de envío por email)
+                    if (result.cancel_url) {
+                        const link = document.createElement('a');
+                        link.href = result.cancel_url;
+                        link.textContent = 'Cancelar esta reserva (enlace único)';
+                        link.className = 'btn btn-sm btn-outline-danger mt-2';
+                        document.getElementById('mensajeExito').appendChild(document.createElement('br'));
+                        document.getElementById('mensajeExito').appendChild(link);
+                    }
+
+                    // Redirigir a página de confirmación con token / info
+                    setTimeout(() => {
+                        if (result.confirm_url) window.location.href = result.confirm_url;
+                        else window.location.href = '{{ url_for("confirmacion") }}';
+                    }, 2000);
+                } else {
+                    document.getElementById('mensajeError').style.display = 'block';
+                    document.getElementById('mensajeError').textContent = 'Error: ' + (result.mensaje || result.error || 'Error desconocido');
+                }
+            } catch (error) {
+                document.getElementById('mensajeError').style.display = 'block';
+                document.getElementById('mensajeError').textContent = 'Error de conexión: ' + error;
+            }
+        });
+    </script>
+</body>
+</html>

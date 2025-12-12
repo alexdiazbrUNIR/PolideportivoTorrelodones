@@ -1,0 +1,121 @@
+/* Estilos generales */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Tarjetas de instalaciones */
+.facility-card {
+    border-left: 4px solid #007bff;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.facility-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.facility-card .btn {
+    margin-top: 1rem;
+}
+
+/* Grid de disponibilidad */
+.availability-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+}
+
+.hora-slot {
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    border: 2px solid #dee2e6;
+    transition: all 0.2s;
+}
+
+.hora-slot.disponible {
+    background-color: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+.hora-slot.disponible:hover {
+    background-color: #c3e6cb;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+.hora-slot.ocupada {
+    background-color: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+    cursor: not-allowed;
+}
+
+/* Botones de fecha */
+.fecha-btn {
+    border-left: 3px solid #6c757d;
+    transition: all 0.2s;
+}
+
+.fecha-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-left-color: #0056b3;
+}
+
+.fecha-btn:hover {
+    background-color: #e9ecef;
+}
+
+/* Formulario */
+.card {
+    border-left: 4px solid #28a745;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-label {
+    font-weight: 500;
+    color: #333;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #218838;
+}
+
+/* Alertas */
+.alert-info {
+    background-color: #d1ecf1;
+    border-left: 4px solid #17a2b8;
+}
+
+/* Footer */
+footer {
+    border-top: 1px solid #dee2e6;
+    padding-top: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .availability-grid {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    }
+    
+    .hora-slot {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+}
