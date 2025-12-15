@@ -68,5 +68,14 @@ PolideportivoTorrelodones/
 - Tarifa fija de 20€/hora para todas las instalaciones
 - Horarios disponibles: 09:00 a 20:00
 
+## Tests
+- Instala dependencias de pruebas: `pip install -r requirements-tests.txt`
+- Ejecuta todos los tests: `./run_tests.ps1` (Windows PowerShell) o `./run_tests.sh` (Linux / macOS)
+
+E2E (Playwright):
+- Se incluye un test E2E en `tests/test_e2e_playwright.py` que automatiza reservar y cancelar vía UI.
+- Para ejecutarlo debes tener Playwright instalado y los navegadores descargados: después de `pip install -r requirements-tests.txt`, ejecuta `playwright install --with-deps`.
+- En entornos con restricciones de red, la instalación de Playwright puede fallar. Como alternativa puedes usar Selenium (requiere instalar `selenium` y un driver de navegador).
+
 ## Autor
 Generado mediante interacción con asistente de IA
